@@ -16,11 +16,12 @@ try {
     console.log(error)
 }
 
-app.get("*", (req, res) => {
-    res.send("Welcome to the Coronapp API!");
-});
+// app.get("*", (req, res) => {
+//     res.send("Welcome to the Coronapp API!");
+// });
 
 app.use('/api', require('./routes/v1/authentication_routes'));
+app.use('/api/user', require('./routes/v1/user_routes'));
 
 app.listen(PORT, () => {
     console.log("API is listening on port " + PORT);
