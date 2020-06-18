@@ -12,6 +12,11 @@ let userSchema = new Schema({
     "hasBeenInContactWith": [{
         type: Schema.Types.ObjectId,
         ref: 'user'
+    }],
+    "messages": [{
+        "from": "",
+        type: String
+
     }]
 });
 

@@ -156,38 +156,4 @@ router.put('/setInfectedStatus', (req, res) => {
 
 });
 
-// Add infected status to user
-// router.put('/setInfectedStatus', (req, res) => {
-//     let username = req.body.username; // The user who's status should be changed
-//     let requestedBy = req.body.requestedBy; // The user who requested the statuschange
-//     let isInfected = req.body.isInfected;
-//     console.log("isresearcher: " + requestedBy.isResearcher);
-//
-//     User.findOne({username: username})
-//         .then((user) => {
-//             if (isInfected) { // Check if user is already infected
-//                 if (user.isInfected) { // If he is, give a conflict error
-//                     res.status(409).json({
-//                         response: new jsonModel("/api/setInfectedStatus", "PUT", 409, "User is already marked as infected")
-//                     });
-//                 } else { // If user is not already set to infected, set to isInfected to true
-//                     user.isInfected = isInfected;
-//                     user.save();
-//                     res.status(200).json({
-//                         response: new jsonModel("/api/setInfectedStatus", "PUT", 200, "User is succesfully  marked as infected")
-//                     })
-//                 }
-//             } else if(!isInfected && requestedBy.isResearcher) {
-//                 user.isInfected = isInfected;
-//                 user.save();
-//                 res.status(200).json({
-//                     response: new jsonModel("/api/setInfectedStatus", "PUT", 200, "User is succesfully  marked as not infected")
-//                 })
-//             }
-//         })
-//         .catch((error) => {
-//             res.status(500).json("Something went wrong");
-//         })
-//
-// });
 module.exports = router;
