@@ -39,6 +39,43 @@ router.post("/getAllUsers", (req, res) => {
        })
 });
 
+router.post("/getAllInfectedUsers", (req, res) => {
+    let requestedBy = req.body.username;
+    let userList = [];
+
+    User.findOne({username: requestedBy})
+        .then((user) => {
+            if (user.isResearcher) {
+                User.find()
+                    .then((users) => {
+                        for (let i = 0; i < users.length - 1; i++) {
+                            let updatedUser = {
+                                "userID": users[i]._id,
+                                "username": users[i].username,
+                                "firstName": users[i].firstName,
+                                "lastName": users[i].lastName,
+                                "dateOfBirth": users[i].dateOfBirth,
+                                "isInfected": users[i].isInfected,
+                                "hasBeenInContactWith": users[i].hasBeenInContactWith
+                            };
+                            if (updatedUser.isInfected) {
+                                userList.push(updatedUser);
+                            }
+                        }
+
+                        res.status(200).json({
+                            response: new jsonModel("/api/user", "GET", 200, "Request succesful"),
+                            users: userList
+                        })
+                    })
+            } else {
+                res.status(403).json({
+                    response: new jsonModel("/api/user", "GET", 403, "Forbidden"),
+                })
+            }
+        })
+});
+
 // Send userID to other user
 router.put('/addToHasBeenInContactWith', (req, res) => {
     let sentByUserId = req.body.sentByUserId;
@@ -46,16 +83,21 @@ router.put('/addToHasBeenInContactWith', (req, res) => {
 
     User.findOne({_id: sentToUserId})
         .then((user) => {
-            if (user.hasBeenInContactWith.includes(sentByUserId)) {
-                console.log("contact exists already");
-                res.status(409).json(new jsonModel("/api/addToHasBeenInContactWith", "PUT", 409, "User is already present in the list of contacts"))
-            } else {
-                user.hasBeenInContactWith.push(sentByUserId);
-                user.save();
-                res.status(200).json({
-                    response: new jsonModel("/api/addToHasBeenInContactWith", "PUT", 200, "User has been added to contact list")
+            User.findOne({_id: sentByUserId})
+                .then((requestedBy) => {
+                    if (user.hasBeenInContactWith.includes(sentByUserId)) {
+                        console.log("contact exists already");
+                        res.status(409).json(new jsonModel("/api/addToHasBeenInContactWith", "PUT", 409, "User is already present in the list of contacts"))
+                    } else {
+                        user.hasBeenInContactWith.push(sentByUserId);
+                        user.save();
+                        requestedBy.hasBeenInContactWith.push(sentToUserId);
+                        requestedBy.save();
+                        res.status(200).json({
+                            response: new jsonModel("/api/addToHasBeenInContactWith", "PUT", 200, "User has been added to contact list")
+                        })
+                    }
                 })
-            }
         })
         .catch((error) => {
             res.json(error);

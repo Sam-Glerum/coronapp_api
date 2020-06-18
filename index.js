@@ -2,10 +2,12 @@ require('dotenv').config(); // Load dotenv for using environment variables
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+const cors = require('cors');
 
 const app = express();
 const PORT = process.env.PORT || 3000; // If set, set PORT to env variable. Otherwise set to 3000
 
+app.use(cors());
 app.use(bodyParser.json());
 
 // Connect to DB
