@@ -20,7 +20,8 @@ router.all(new RegExp("^(?!\/login$|\/register$).*"), (req, res, next) => {
             res.status((error.status || 401)).json("Not Authorised");
         } else {
             req.user = {
-                username: payload.sub
+                username: payload.sub,
+                role: payload.role
             };
             next();
         }
@@ -74,6 +75,7 @@ router.post('/login', (req, res) => {
 
     const username = loginInfo.username;
     const password = loginInfo.password;
+    const role = loginInfo.isResearcher;
 
     User.findOne({username: username})
         .then((user) => {
@@ -81,7 +83,7 @@ router.post('/login', (req, res) => {
         })
         .then((samePassword) => {
             if (samePassword) {
-                let token = authentication.encodeToken(username);
+                let token = authentication.encodeToken(username, role);
                 res.status(200).json({
                     response: new jsonModel("/api/login", "POST", 200, "You have succesfully logged in"),
                     token: token
