@@ -16,8 +16,9 @@ let userSchema = new Schema({
     "messages": [{
         "from": "",
         type: String
-
-    }]
+    }],
+    "publicKey": String,
+    "checkSum": String
 });
 
 let User = mongoose.model('User', userSchema);
