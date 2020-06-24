@@ -4,8 +4,7 @@ const authentication = require('../../authentication/authentication');
 const jsonModel = require('../../models/response/JsonModel');
 const User = require('../../schema/User');
 
-router.post("/sendMessageToUser", (req, res) => {
-
+router.post("/send2fCodeToUser", (req, res) => {
 });
 
 module.exports = router;
