@@ -14,7 +14,9 @@ let userSchema = new Schema({
         ref: 'user'
     }],
     "messages": [{
-        "from": "",
+        from: "",
+        subject: "",
+        content: "",
         type: String
     }],
     "publicKey": String,

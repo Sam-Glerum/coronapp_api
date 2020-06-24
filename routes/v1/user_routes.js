@@ -5,14 +5,20 @@ const jsonModel = require('../../models/response/JsonModel');
 const User = require('../../schema/User');
 
 router.post("/getAllUsers", (req, res) => {
-   let requestedBy = req.body.username;
-   let userList = [];
+   let token = req.header('X-Access-Token');
+   let userObject = null;
+
+   authentication.decodeToken(token, (error, payload) => {
+       userObject = payload
+   });
+    let requestedBy = userObject.sub;
 
    User.findOne({username: requestedBy})
        .then((user) => {
            if (user.isResearcher) {
                User.find()
                    .then((users) => {
+                       let userList = [];
                        for (let i = 0; i < users.length - 1; i++) {
                            let updatedUser = {
                                "userID": users[i]._id,
@@ -32,9 +38,23 @@ router.post("/getAllUsers", (req, res) => {
                        })
                    })
            } else {
-               res.status(403).json({
-                   response: new jsonModel("/api/user", "GET", 403, "Forbidden"),
-               })
+               let userList = [];
+               User.find()
+                   .then((users) => {
+                       for (let i = 0; i < users.length - 1; i++) {
+                           let updatedUser = {
+                               "userID": users[i]._id
+                           };
+                           userList.push(updatedUser);
+                       }
+                       res.status(200).json({
+                           response: new jsonModel("/api/user", "GET", 200, "Request succesful"),
+                           users: userList
+                       })
+                   })
+                   .catch((error) => {
+                       res.send(error);
+                   })
            }
        })
 });

@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const https = require('https');
 const fs = require('fs');
+const authenticate = require('./authentication/authenticate');
 const cors = require('cors');
 
 const app = express();
@@ -26,14 +27,11 @@ app.get("*", (req, res) => {
 
 app.use('/api', require('./routes/v1/authentication_routes'));
 app.use('/api/user', require('./routes/v1/user_routes'));
+app.use('/api/researcher', authenticate, require('./routes/v1/researcher_routes'));
 
 https.createServer({
     key: fs.readFileSync('./key.pem'),
     cert: fs.readFileSync('./cert.pem'),
     passphrase: process.env.CERTPASS
 }, app).listen(3000);
-// app.listen(PORT, () => {
-//     console.log("API is listening on port " + PORT);
-// });
-
 

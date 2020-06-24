@@ -75,21 +75,31 @@ router.post('/login', (req, res) => {
 
     const username = loginInfo.username;
     const password = loginInfo.password;
-    const role = loginInfo.isResearcher;
+    let isResearcher = null;
+    let userObject = null;
+    let userID = "";
 
     User.findOne({username: username})
         .then((user) => {
+            userObject = user;
+            userID = user._id;
             return bcrypt.compare(password, user.password);
+        })
+        .catch((error) => {
+            res.send(error);
         })
         .then((samePassword) => {
             if (samePassword) {
-                let token = authentication.encodeToken(username, role);
+                isResearcher = userObject.isResearcher;
+                let token = authentication.encodeToken(username, userID, isResearcher);
                 res.status(200).json({
                     response: new jsonModel("/api/login", "POST", 200, "You have succesfully logged in"),
                     token: token
                 })
             }
-        })
+        }).catch((error) => {
+            res.send(error);
+    })
 });
 
 module.exports = router;
