@@ -39,7 +39,8 @@ router.post('/register', (req, res) => {
         lastName: registerInfo.lastName.trim(),
         dateOfBirth: registerInfo.dateOfBirth,
         isResearcher: registerInfo.isResearcher,
-        isInfected: registerInfo.isInfected
+        isInfected: registerInfo.isInfected,
+        TwoFactorCode: ""
     });
 
     User.findOne({username: req.body.username})

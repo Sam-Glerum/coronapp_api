@@ -4,7 +4,6 @@ module.exports = (req, res, next) => {
     try {
         const token = req.header('X-Access-Token');
         authentication.decodeToken(token, (error, payload) => {
-            console.log("isResearcher: " + payload.isResearcher);
             if (payload.isResearcher) {
                 next();
             } else {

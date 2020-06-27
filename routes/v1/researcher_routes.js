@@ -18,10 +18,30 @@ router.post("/send2fCodeToUser", (req, res) => {
             if (user === null) {
                 res.send("User does not exist");
             } else {
-                user.messages.push({
-                    from: researcher.sub,
-                    subject: "Two factor code",
-                    content: random2fCode
+                
+                user.twoFactorCode = random2fCode.trim();
+                user.save()
+                    .then(() => {
+                        res.status(200).json("okay");
+                    });
+            }
+        })
+        .catch((error) => {
+            res.send(error);
+        })
+});
+
+router.get("/validateUserByCode", (req, res) => {
+    let twoFactorCode = req.body.twoFactorCode.trim();
+    User.findOne({twoFactorCode: twoFactorCode})
+        .then((user) => {
+            if (user === null) {
+                res.status(404).json("The supplied code is not valid")
+            } else {
+                res.status(200).json({
+                    userID: user._id,
+                    username: user.username,
+                    twoFactorCode: twoFactorCode
                 })
             }
         })

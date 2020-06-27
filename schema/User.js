@@ -19,6 +19,7 @@ let userSchema = new Schema({
         content: "",
         type: String
     }],
+    "twoFactorCode": {type: String, unique: true},
     "publicKey": String,
     "checkSum": String
 });

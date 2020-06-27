@@ -4,7 +4,7 @@ const authentication = require('../../authentication/authentication');
 const jsonModel = require('../../models/response/JsonModel');
 const User = require('../../schema/User');
 
-router.post("/getAllUsers", (req, res) => {
+router.get("/getAllUsers", (req, res) => {
    let token = req.header('X-Access-Token');
    let userObject = null;
 

@@ -21,10 +21,6 @@ try {
     console.log(error)
 }
 
-app.get("*", (req, res) => {
-    res.send("Welcome to the Coronapp API!");
-});
-
 app.use('/api', require('./routes/v1/authentication_routes'));
 app.use('/api/user', require('./routes/v1/user_routes'));
 app.use('/api/researcher', authenticate, require('./routes/v1/researcher_routes'));
