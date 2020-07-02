@@ -4,6 +4,25 @@ const authentication = require('../../authentication/authentication');
 const jsonModel = require('../../models/response/JsonModel');
 const User = require('../../schema/User');
 
+router.post("/validateUserByCode", (req, res) => {
+    let twoFactorCode = req.body.twoFactorCode.trim();
+    User.findOne({twoFactorCode: twoFactorCode})
+        .then((user) => {
+            if (user === null) {
+                res.status(404).json("The supplied code is not valid")
+            } else {
+                res.status(200).json({
+                    userID: user._id,
+                    username: user.username,
+                    twoFactorCode: twoFactorCode
+                })
+            }
+        })
+        .catch((error) => {
+            res.send(error);
+        })
+});
+
 router.post("/send2fCodeToUser", (req, res) => {
     const token = req.header('X-Access-Token');
 
@@ -31,23 +50,21 @@ router.post("/send2fCodeToUser", (req, res) => {
         })
 });
 
-router.get("/validateUserByCode", (req, res) => {
-    let twoFactorCode = req.body.twoFactorCode.trim();
-    User.findOne({twoFactorCode: twoFactorCode})
+router.delete("/deleteTwoFactorCode", (req, res) => {
+    let userID = req.body.userID;
+
+    User.findById(userID)
         .then((user) => {
             if (user === null) {
-                res.status(404).json("The supplied code is not valid")
+                res.status(404).json("User " + userID + " does not exist");
             } else {
-                res.status(200).json({
-                    userID: user._id,
-                    username: user.username,
-                    twoFactorCode: twoFactorCode
-                })
+                user.twoFactorCode = "";
+                user.save();
+                res.status(200).json("Two Factor code has been succesfully deleted!")
             }
-        })
-        .catch((error) => {
+        }).catch((error) => {
             res.send(error);
-        })
+    })
 });
 
 module.exports = router;

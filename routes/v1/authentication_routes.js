@@ -20,11 +20,11 @@ router.all(new RegExp("^(?!\/login$|\/register$).*"), (req, res, next) => {
             res.status((error.status || 401)).json("Not Authorised");
         } else {
             req.user = {
-                username: payload.sub,
-                role: payload.role
-            };
-            next();
-        }
+            username: payload.sub,
+            role: payload.role
+        };
+        next();
+    }
     })
 });
 

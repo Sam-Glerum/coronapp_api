@@ -60,8 +60,15 @@ router.get("/getAllUsers", (req, res) => {
 });
 
 router.post("/getAllInfectedUsers", (req, res) => {
-    let requestedBy = req.body.username;
+    // let requestedBy = req.body.username;
     let userList = [];
+    let token = req.header('X-Access-Token');
+    let userObject = null;
+
+    authentication.decodeToken(token, (error, payload) => {
+        userObject = payload
+    });
+    let requestedBy = userObject.sub;
 
     User.findOne({username: requestedBy})
         .then((user) => {
