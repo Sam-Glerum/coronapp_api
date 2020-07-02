@@ -14,10 +14,14 @@ let userSchema = new Schema({
         ref: 'user'
     }],
     "messages": [{
-        "from": "",
+        from: "",
+        subject: "",
+        content: "",
         type: String
-
-    }]
+    }],
+    "twoFactorCode": {type: String, unique: true},
+    "publicKey": String,
+    "checkSum": String
 });
 
 let User = mongoose.model('User', userSchema);

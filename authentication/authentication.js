@@ -2,12 +2,13 @@ const moment = require('moment');
 const jwt = require('jwt-simple');
 
 // Encode (username to token)
-function encodeToken(username, role) {
+function encodeToken(username, userID, isResearcher) {
     const payload = {
         exp: moment().add(5, 'days').unix(),
         iat: moment().unix(),
         sub: username,
-        role: role
+        isResearcher: isResearcher,
+        userID: userID
     };
 
     return jwt.encode(payload, process.env.secretKey, null, null)
