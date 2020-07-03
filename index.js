@@ -11,6 +11,7 @@ const app = express();
 const PORT = process.env.PORT || 3000; // If set, set PORT to env variable. Otherwise set to 3000
 
 app.use(cors());
+
 app.use(bodyParser.json());
 
 // Connect to DB
@@ -21,6 +22,11 @@ try {
     console.log(error)
 }
 
+app.use((req, res, next) => {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    next();
+});
 app.use('/api', require('./routes/v1/authentication_routes'));
 app.use('/api/user', require('./routes/v1/user_routes'));
 app.use('/api/researcher', authenticate, require('./routes/v1/researcher_routes'));
